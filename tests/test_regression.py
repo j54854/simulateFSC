@@ -1,3 +1,5 @@
+import pytest
+
 import limitedbg as lbg
 
 
@@ -44,3 +46,11 @@ def test_lot_size_respected():
     chain.run(100)
     for s in chain.stages[0].states:
         assert s['order_out'] % 5 == 0
+
+
+def test_limit_check():
+    lbg.Chain(exp_age=7)  # 最上流の期限は 7 - 6 = 1
+    lbg.Chain(exp_age=12, extra_limits=[(0, 7)])
+    for kwargs in [{'exp_age': 6}, {'exp_age': 12, 'extra_limits': [(0, 6)]}, {'exp_age': 12, 'extra_limits': [(2, 2)]}]:
+        with pytest.raises(AssertionError):
+            lbg.Chain(**kwargs)

@@ -20,7 +20,7 @@ Over_Col = (0, 0, 0)  # 量が基準値を超えたときの色
 def set_screen_size(chain: Chain) -> tuple[int, int]:
 # ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
     # 全段階の手元在庫と入出荷ロットが描画できるように画面の幅を設定
-    width = (chain.length +sum(chain.lead_times) +1) *Dx
+    width = (chain.length +sum(chain.supply_lead_times) +1) *Dx
     # 製品の全ageの在庫と廃棄量，受注残，発注残，発注量が描画できるように画面の高さを設定
     height = (chain.life +4) *Dy
     return width, height
@@ -39,7 +39,7 @@ def draw_frame(screen: pg.Surface, chain: Chain, font: pg.font.Font) -> None:
 # ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
     x = 1.25  # フレームの左余白
     for id in reversed(range(chain.length)):  # サプライチェーンの段階を逆順に取得
-        for lab in ['En route', 'Stage' +str(id), 'Cargo']:
+        for lab in ['Pipeline', 'Stage' +str(id), 'Cargo']:
             blit_text(screen, x *Dx, 0.25 *Dy, lab, font)  # x軸ラベル
             pg.draw.aaline(screen, Line_Col, (x *Dx, 0.65 *Dy), (x *Dx, screen.get_height() -0.5 *Dy))  # 縦線
             x += 1  # 右に1単位ずらす
@@ -60,13 +60,13 @@ def draw_frame(screen: pg.Surface, chain: Chain, font: pg.font.Font) -> None:
 def draw_state(screen: pg.Surface, offset: int, life: int, limit: int, state: StageState | StageSummary) -> None:
 # ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
     x = 1.25 +offset  # 0.25はフレームの左余白，offsetはこの段階より左側に描画される縦棒の数
-    # 前期までの発送された配送中の在庫（en_route）
+    # 輸送中の在庫（supply_pipeline，今期の発送分を含む）
     for age in range(life):
-        radius = math.sqrt(state['en_route_vols'][age]) *Dy /Adj
+        radius = math.sqrt(state['supply_pipeline_vols'][age]) *Dy /Adj
         pg.draw.circle(screen, Stock_Col, (x *Dx, (age +2) *Dy), radius)
     x += 1
     # 今期末の手元在庫（on_hand）
-    radius = math.sqrt(state['order_out']) *Dy /Adj  # 前期の発注量
+    radius = math.sqrt(state['order_out']) *Dy /Adj  # 今期の発注量
     pg.draw.circle(screen, Order_Col, (x *Dx, 1 *Dy), radius)
     for age in range(life):
         radius = math.sqrt(state['on_hand_vols'][age]) *Dy /Adj

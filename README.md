@@ -3,7 +3,7 @@
 
 ## 概要
 
-ビアゲーム（Beer Game）の多段階サプライチェーンに，食品の**鮮度低下**と**廃棄期限**を導入したシミュレーションモデルです。各在庫点で製品を生産からの経過時間（age）別に管理し，廃棄ロスを含むコスト評価が可能です。詳細は [docs/getting_started.md](docs/getting_started.md) を参照してください。
+ビアゲーム（Beer Game）の多段階サプライチェーンに，食品の**鮮度低下**と**廃棄期限**を導入したシミュレーションモデルです。各在庫点で製品を生産からの経過時間（age）別に管理します．発注リードタイムと補充リードタイムを別々に設定でき，小売の欠品はバックオーダーと失注を切り替えられます．ログから，廃棄ロスを含む総費用や社会的余剰を外部で評価できます．詳細は [docs/getting_started.md](docs/getting_started.md) を参照してください。
 
 ## セットアップ
 
@@ -29,8 +29,11 @@ uv run your_script.py
 ## 実行
 
 ```bash
-# シミュレーション実行（結果を data/ フォルダにCSV出力）
+# シミュレーション実行（結果を data/ フォルダにCSVとparams.jsonで出力）
 uv run examples/lbg_run.py
+
+# ログから総費用・社会的余剰を算出
+uv run examples/lbg_evaluate.py
 
 # Pygame可視化付きシミュレーション（リアルタイム動画表示）
 uv run examples/lbg_movie.py
@@ -40,6 +43,7 @@ uv run examples/lbg_movie.py
 
 - [docs/getting_started.md](docs/getting_started.md) — プロジェクト概要・セットアップ・最初の実行
 - [docs/parameters.md](docs/parameters.md) — シミュレーションパラメータ一覧
+- [docs/log_format.md](docs/log_format.md) — ログの列の意味と記録のタイミング
 - [docs/customization.md](docs/customization.md) — 発注ロジック・需要・生産のカスタマイズ方法
 
 ## 開発者向け

@@ -27,8 +27,6 @@ def test_no_nan(tmp_path):
         for state in stage.states:
             assert not math.isnan(state['on_hand'])
             assert not math.isnan(state['waste'])
-            for c in state['costs']:
-                assert not math.isnan(c)
 
 
 def test_dump_log(tmp_path):

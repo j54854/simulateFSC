@@ -3,7 +3,7 @@ import limitedbg as lbg
 # ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 def main() -> None:
 # ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-    chain = lbg.Chain(exp_age=9)
+    chain = lbg.Chain(exp_age=12)
     chain.dry_run(periods=100)
     chain.run(periods=500)
     chain.dump_log()
